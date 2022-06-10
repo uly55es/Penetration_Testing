@@ -40,3 +40,31 @@ nmap -D <DECOY1>,<ME>,<DECOY2> <TARGET>
 
 # Fragment Packets
 -f
+
+# Idle/Zombie Scan
+# nmap will make it appear scan coming from idle host
+nmap -sI <ZOMBIE_IP> <TARGET>
+
+# Add --reason for more details on conclusions
+--reason
+
+# -v for verbosity, -vv
+-v
+-vv
+
+# -d for debugging details, -dd
+-d
+-dd
+
+# Adding -sV will determine service and version information
+# Control intensity w/ --version-intensity LEVEL
+# -sV --version-light has intensity of 2
+# -sV --version-all has intensity of 9
+# -sS (Stealth) is not possible w/ this scan
+nmap -sV --version-light <TARGET>
+
+# OS Detection enabled w/ -O
+nmap -sS -O <TARGET>
+
+# Add --traceroute to find routers between you and target
+nmap -sS --traceroute <TARGET>
