@@ -1,7 +1,9 @@
 # Passive Recon Command Line Tools
 
 `whois` -> query WHOIS servers
+
 `nslookup` -> query DNS servers
+
 `dig` -> query DNS servers
 
 ## WHOIS
@@ -16,6 +18,7 @@
 - Stands for Name Server Lookup
 
 `nslookup <DOMAIN_NAME>`
+
 `nslookup <OPTIONS> <DOMAIN_NAME> <SERVER>`
 
 | Query Type | Result |
@@ -34,8 +37,11 @@
 - Domain Information Groper
 
 `dig <DOMAIN_NAME>`
+
 `dig <DOMAIN_NAME> <TYPE>`
+
 `dig @<SERVER> <DOMAIN_NAME> <TYPE>`
+	
 
 `dig @8.8.8.8 example.com MX`
 
