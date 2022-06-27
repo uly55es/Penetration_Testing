@@ -18,7 +18,7 @@ mysql -u [username] -p -h [host_ip}
 mysql -u root -p -h 10.10.10.10
 ```
 
-### Open SQL databse file locally
+### Open SQL database file locally
 
 Change to the directory of the mysql file and type the following command:
 
