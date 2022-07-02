@@ -113,3 +113,12 @@ find / -name gcc*
 # Find files with the SUID bit
 find / -perm -u=s -type f 2>/dev/null
 
+andscape:*:18561:0:99999:7:::
+pollinate:*:18561:0:99999:7:::
+ec2-instance-connect:!:18561:0:99999:7:::
+systemd-coredump:!!:18796::::::
+ubuntu:!:18796:0:99999:7:::
+lxd:!:18796::::::
+karen:$6$QHTxjZ77ZcxU54ov$DCV2wd1mG5wJoTB.cXJoXtLVDZe1Ec1jbQFv3ICAYbnMqdhJzIEi3H4q>
+frank:$6$2.sUUDsOLIpXKxcr$eImtgFExyr2ls4jsghdD3DHLHHP9X50Iv.jNmwo/BJpphrPRJWjelWEz2HH.joV14aDEwW1c3CahzB1uaqeLR1:18796:0:99999:7:::
+
