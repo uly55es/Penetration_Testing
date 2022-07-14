@@ -10,7 +10,8 @@
   + [Creating Objects From Previous cmdlets](#creating-objects-from-previous-cmdlets)
   + [Filtering Objects](#filtering-objects)
   + [Sort Object](#sort-object)
-  + 
+- [Examples](#examples)
+- [Powershell Scripting](#powershell-scripting)
 
 ## Summary
 
@@ -114,8 +115,10 @@ Verb-Noun | Sort-Object
 ```powershell
 Get-ChildItem | Sort-Object
 ```
+***
 
-### Examples
+## Examples
+
 #### Find a Specific File
 ```powershell
 Get-ChildItem -Path C:\ -Include *interesting-file.txt* -File -Recurse -ErrorAction SilentlyContinue
@@ -208,6 +211,11 @@ Get-ScheduleTask -TaskName new-sched-task
 ```powershell
 Get-Acl c:/
 ```
+
+## Powershell Scripting
+
+[Powershell Language](https://learnxinyminutes.com/docs/powershell/)
+
 [If Statement Operators](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-6)
 
 #### Port Scanner Script
