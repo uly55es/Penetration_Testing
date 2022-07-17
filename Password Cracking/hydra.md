@@ -112,3 +112,13 @@ hydra -l <USERNAME> -P <WORDLIST> 10.10.10.10 http-post-form "/:username=^USER^&
 * VMware-Auth
 * VNC
 * XMPP
+
+
+cupp -i
+sed -ri '/^.{,7}$/d' william.txt            # remove shorter than 8
+sed -ri '/[!-/:-@\[-`\{-~]+/!d' william.txt # remove no special chars
+sed -ri '/[0-9]+/!d' william.txt            # remove no numbers
+git clone https://github.com/urbanadventurer/username-anarchy.git
+./username-anarchy Bill Gates > bill.txt
+F=<form name='login'
+
