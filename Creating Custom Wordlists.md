@@ -18,6 +18,9 @@
   + [Specifying Elements](#specifying-elements)
 - [CeWL](#cewl)
   + [CeWL Syntax](#cewl-syntax)
+- [Previously Cracked Passwords](#previously-cracked-passwords)
+- [Hashcat-utils](#hashcat-utils)
+  + [Maskprocessor](#maskprocessor)
 
 ***
 
@@ -222,11 +225,17 @@ Can spider multiple pages present on a given website. Also supports extraction o
 ```bash
 cewl -d 5 -m 8 -e http://inlanefreight.com/blog -w wordlist.txt
 ```
+
+***
+
 ## Previously Cracked Passwords
 Stored in the `hashcat.potfile`. Can be used to create new wordlists of previously cracked passwords:
 ```bash
 cut -d: -f 2- ~/hashcat.potfile
 ```
+
+***
+
 ## Hashcat-utils
 [Hashcat-utils](https://github.com/hashcat/hashcat-utils)
 
