@@ -222,7 +222,25 @@ Can spider multiple pages present on a given website. Also supports extraction o
 ```bash
 cewl -d 5 -m 8 -e http://inlanefreight.com/blog -w wordlist.txt
 ```
+## Previously Cracked Passwords
+Stored in the `hashcat.potfile`. Can be used to create new wordlists of previously cracked passwords:
+```bash
+cut -d: -f 2- ~/hashcat.potfile
+```
+## Hashcat-utils
+[Hashcat-utils](https://github.com/hashcat/hashcat-utils)
 
+Many utilities that can be useful for advanced password cracking.
+
+### Maskprocessor
+[Maskprocessor](https://github.com/hashcat/maskprocessor)
+
+[Usage](https://hashcat.net/wiki/doku.php?id=maskprocessor)
+
+Can be used to create wordlists using a given mask.
+```bash
+/mp64.bin Welcome?s
+```
 
 
 
