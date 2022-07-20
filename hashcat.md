@@ -11,6 +11,8 @@
 - [Hashcat Hash Mode Reference](#hashcat-hash-mode-reference)
 - 
 
+***
+
 ## Summary
 A potent and useful tool for performing password cracking attacks against a wide variety of algorithms.
 
@@ -36,6 +38,9 @@ $6$    : SHA512
 # Second field is the salt
 # Third field is hash format
 ```
+
+***
+
 ## Hashid
 A Python tool, used to detect various kinds of hashes. Can be used to identify over 200 unique hash types.
  
@@ -59,6 +64,9 @@ Can also provide the corresponding `Hashcat` hash mode with `-m`:
 hashid '$DCC2$10240#tom#e4e938d12fe5974dc42a90120bd9c90f' -m
 ```
 ### [Hashcat Hash Mode Reference](https://hashcat.net/wiki/doku.php?id=example_hashes)
+
+***
+
 ## Hashcat Overview
 Download from [website](https://hashcat.net/hashcat/) using `wget` and then decompressed using the `7z` (7-Zip file archiver).
 ### Help Menu
@@ -99,6 +107,9 @@ Optimize speed:
 | Optimized Kernels | This is the -0 flag, which means `Enable optimized kernels (limits password length)`. This can take the estimated time from days to hours, so it is always recommended to run with `-0` first and then rerun after without the `-0` if your GPU is idle |
 | Workload | This is the `-w` flag; `Enable a specific workload profile`. Default number is `2`, but if you want to use your computer while hashcat is running, set this to `1`. If you plan on the computer only running Hashcat, this can be set to `3`. |
 > **NOTE:** The use of `--force` should be avoided. Disables safety checks, muting warnings, and bypoasses problems, which can lead to false positives, false negatives, malfunctions, etc.
+
+***
+
 ## Dictionary Attack
 ### Wordlists
 * [SecLists](https://github.com/danielmiessler/SecLists/tree/master/Passwords)
@@ -109,6 +120,9 @@ hashcat -a 0 -m <hash type> <hash file> <wordlist>
 ```bash
 hashcat -a 0 -m 1400 sha256_hash_example /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
 ```
+
+***
+
 ## Combination Attack
 Takes in two word lists as input and creates combinations from them. 
 ```bash
@@ -121,6 +135,9 @@ hashcat -a 1 -m <hash type> <hash file> <wordlist1> <wordlist2>
 ```bash
 hashcat -a 1 -m 0 combination_md5 wordlist1 wordlist2
 ```
+
+***
+
 ## Mask Attack
 Used to generate words matching a specific pattern. This type of attack is useful when the pasword length or format is known. A mask can be created using static characters, or placeholders:
 | Placeholder | Meaning |
@@ -143,6 +160,9 @@ hashcat -a 3 -m 0 md5_mask_example_hash -1 01 'ILFREIGHT?l?l?l?l?l20?1?d'
 ```bash
 echo -n 'ILFREIGHTabcxy2015' | md5sum | tr -d " -" > md5_mask_example_hash
 ```
+
+***
+
 ## Hybrid Mode
 A variation of the combination attack; multiple modes can be used together for a fine-tuned wordlist creation. Useful when you know or have a genreal idea of the organization's password policy or common password syntax.
 
@@ -156,26 +176,94 @@ Attack mode `7` can be used to prepend characters to words using a given mask.
 ```bash
 hashcat -a 7 -m 0 hybrid_hash_prefix -1 01 '20?1?d' /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
 ```
-## Previously Cracked Passwords
-Stored in the `hashcat.potfile`. Can be used to create new wordlists of previously cracked passwords:
+
+***
+
+## Working with Rules
+Rule-based attack is the most advanced and complex password cracking mode.
+
+| Function | Description | Input | Output |
+| --- | --- | --- | --- |
+|l |	Convert all letters to lowercase |	InlaneFreight2020 |	inlanefreight2020 |
+| u |	Convert all letters to uppercase |	InlaneFreight2020 |	INLANEFREIGHT2020 |
+|c / C |	capitalize / lowercase first letter and invert the rest |	inlaneFreight2020 / Inlanefreight2020 |	Inlanefreight2020 / iNLANEFREIGHT2020 |
+|t / TN |	Toggle case : whole word / at position N |	InlaneFreight2020 |	iNLANEfREIGHT2020|
+|d / q / zN / ZN |	Duplicate word / all characters / first character / last character |	InlaneFreight2020 |	InlaneFreight2020InlaneFreight2020 / IInnllaanneeFFrreeiigghhtt22002200 / IInlaneFreight2020 / InlaneFreight20200 |
+|{ / } |	Rotate word left / right |	InlaneFreight2020 |	nlaneFreight2020I / 0InlaneFreight202|
+|^X / $X |	Prepend / Append character X |	InlaneFreight2020 (^! / $! ) 	|!InlaneFreight2020 / InlaneFreight2020!|
+|r |	Reverse |	InlaneFreight2020 |	0202thgierFenalnI|
+
+[Complete List of Functions](https://hashcat.net/wiki/doku.php?id=rule_based_attack#implemented_compatible_functions)
+
+[Rejection Rules](https://hashcat.net/wiki/doku.php?id=rule_based_attack#rules_used_to_reject_plains)
+
+> **NOTE:** Reject rules only work with hashcat-legacy or when using the -j or -k with Hashcat
+
+### Rule Creation
+#### Rules
 ```bash
-cut -d: -f 2- ~/hashcat.potfile
+c so0 si1 se3 ss5 sa@ $2 $0 $1 $9
 ```
-## Hashcat-utils
-[Hashcat-utils](https://github.com/hashcat/hashcat-utils)
-
-Many utilities that can be useful for advanced password cracking.
-
-### Maskprocessor
-[Maskprocessor](https://github.com/hashcat/maskprocessor)
-
-[Usage](https://hashcat.net/wiki/doku.php?id=maskprocessor)
-
-Can be used to create wordlists using a given mask.
+The first letter word is capitalized with the c function. Then rule uses the substitute function s to replace o with 0, i with 1, e with 3 and a with @. At the end, the year 2019 is appended to it. Copy the rule to a file so that we can debug it.
+#### Create a Rule File
 ```bash
-/mp64.bin Welcome?s
+echo 'so0 si1 se3 ss5 sa@ c $2 $0 $1 $9' > rule.txt
 ```
+#### Store the Password in a File
+```bash
+echo 'password_ilfreight' > test.txt
+```
+Rules can be debugged using the "-r" flag to specify the rule, followed by the wordlist.
+#### Debugging Rules
+```bash
+hashcat -r rule.txt test.txt --stdout
+```
+#### Cracking Passwords using Wordlists and Rules
+```bash
+hashcat -a 0 -m 100 hash /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt -r rule.txt
+```
+#### Default Rules
+```bash
+ls -l /usr/share/hashcat/rules/
 
+total 2576
+-rw-r--r-- 1 root root    933 Jun 19 06:20 best64.rule
+-rw-r--r-- 1 root root    633 Jun 19 06:20 combinator.rule
+-rw-r--r-- 1 root root 200188 Jun 19 06:20 d3ad0ne.rule
+-rw-r--r-- 1 root root 788063 Jun 19 06:20 dive.rule
+-rw-r--r-- 1 root root 483425 Jun 19 06:20 generated2.rule
+-rw-r--r-- 1 root root  78068 Jun 19 06:20 generated.rule
+drwxr-xr-x 1 root root   2804 Jul  9 21:01 hybrid
+-rw-r--r-- 1 root root 309439 Jun 19 06:20 Incisive-leetspeak.rule
+-rw-r--r-- 1 root root  35280 Jun 19 06:20 InsidePro-HashManager.rule
+-rw-r--r-- 1 root root  19478 Jun 19 06:20 InsidePro-PasswordsPro.rule
+-rw-r--r-- 1 root root    298 Jun 19 06:20 leetspeak.rule
+-rw-r--r-- 1 root root   1280 Jun 19 06:20 oscommerce.rule
+-rw-r--r-- 1 root root 301161 Jun 19 06:20 rockyou-30000.rule
+-rw-r--r-- 1 root root   1563 Jun 19 06:20 specific.rule
+-rw-r--r-- 1 root root  64068 Jun 19 06:20 T0XlC-insert_00-99_1950-2050_toprules_0_F.rule
+-rw-r--r-- 1 root root   2027 Jun 19 06:20 T0XlC-insert_space_and_special_0_F.rule
+-rw-r--r-- 1 root root  34437 Jun 19 06:20 T0XlC-insert_top_100_passwords_1_G.rule
+-rw-r--r-- 1 root root  34813 Jun 19 06:20 T0XlC.rule
+-rw-r--r-- 1 root root 104203 Jun 19 06:20 T0XlCv1.rule
+-rw-r--r-- 1 root root     45 Jun 19 06:20 toggles1.rule
+-rw-r--r-- 1 root root    570 Jun 19 06:20 toggles2.rule
+-rw-r--r-- 1 root root   3755 Jun 19 06:20 toggles3.rule
+-rw-r--r-- 1 root root  16040 Jun 19 06:20 toggles4.rule
+-rw-r--r-- 1 root root  49073 Jun 19 06:20 toggles5.rule
+-rw-r--r-- 1 root root  55346 Jun 19 06:20 unix-ninja-leetspeak.rule
+```
+#### Generate Random Rules
+Hashcat provides an option to generate random rules on the fly and apply them to the input wordlist. The following command will generate 1000 random rules and apply them to each word from rockyou.txt by specifying the "-g" flag. There is no certainty to the success rate of this attack as the generated rules are not constant.
+```bash
+hashcat -a 0 -m 100 -g 1000 hash /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
+```
+#### Publicly Available Rules
+[nsa-rules](https://github.com/NSAKEY/nsa-rules)
+
+[Hob0Rules](https://github.com/praetorian-code/Hob0Rules)
+
+[corporate.rule](https://github.com/HackLikeAPornstar/StratJumbo/blob/master/chap3/corporate.rule)
 
 
  
