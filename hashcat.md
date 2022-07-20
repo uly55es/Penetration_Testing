@@ -156,7 +156,25 @@ Attack mode `7` can be used to prepend characters to words using a given mask.
 ```bash
 hashcat -a 7 -m 0 hybrid_hash_prefix -1 01 '20?1?d' /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
 ```
+## Previously Cracked Passwords
+Stored in the `hashcat.potfile`. Can be used to create new wordlists of previously cracked passwords:
+```bash
+cut -d: -f 2- ~/hashcat.potfile
+```
+## Hashcat-utils
+[Hashcat-utils](https://github.com/hashcat/hashcat-utils)
 
+Many utilities that can be useful for advanced password cracking.
+
+### Maskprocessor
+[Maskprocessor](https://github.com/hashcat/maskprocessor)
+
+[Usage](https://hashcat.net/wiki/doku.php?id=maskprocessor)
+
+Can be used to create wordlists using a given mask.
+```bash
+/mp64.bin Welcome?s
+```
 
 
 
