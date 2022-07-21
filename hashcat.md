@@ -265,6 +265,90 @@ hashcat -a 0 -m 100 -g 1000 hash /opt/useful/SecLists/Passwords/Leaked-Databases
 
 [corporate.rule](https://github.com/HackLikeAPornstar/StratJumbo/blob/master/chap3/corporate.rule)
 
+## Cracking Misc Files & Hashes
+
+### Tools
+[JohnTheRipper Tools](https://github.com/magnumripper/JohnTheRipper/tree/bleeding-jumbo/src)
+
+[office2john](https://raw.githubusercontent.com/magnumripper/JohnTheRipper/bleeding-jumbo/run/office2john.py)
+```bash
+python office2john.py hashcat_Word_example.docx
+```
+```bash
+hashcat -m 9600 office_hash /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
+```
+[zip2john](https://github.com/magnumripper/JohnTheRipper/blob/bleeding-jumbo/src/zip2john.c)
+```bash
+# set password for zip
+zip --password zippyzippy blueprints.zip dummy.pdf 
+```
+```bash
+zip2john ~/Desktop/HTB/Academy/Cracking\ with\ Hashcat/blueprints.zip
+```
+```bash
+hashcat -a 0 -m 17200 pdf_hash_to_crack /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
+```
+[keepass2john](https://github.com/magnumripper/JohnTheRipper/blob/bleeding-jumbo/src/keepass2john.c)
+```bash
+python keepass2john.py Master.kdbx 
+```
+```bash
+hashcat -a 0 -m 13400 keepass_hash /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
+```
+[pdf2john](https://raw.githubusercontent.com/truongkma/ctf-tools/master/John/run/pdf2john.py)
+```bash
+python pdf2john.py inventory.pdf | awk -F":" '{ print $2}'
+```
+```bash
+hashcat -a 0 -m 10500 pdf_hash /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
+```
+
+## Cracking WPA/WPA2 Handshakes with Hashcat
+Hashcat can be used to successfully crack MIC (4-way handshake) and PMKID (1st packet/handshake)
+
+### Cracking MIC
+To perform, need to capture a valid 4-way handshake by sending de-authentication frames to force a client (user) to disconnect from an AP. When the client reauthenticates (usually automatically), the attacker can attempt to sniff out the WPA 4-way handshake without their knowledge. This handshake is a collection of keys exchanged during the authentication process between the client and the associated AP. 
+![image](https://user-images.githubusercontent.com/89045912/180088458-3af0a749-b487-4385-aaff-9b7e50d318b2.png)
+
+After successful capture with a tool such as **airodump-ng**, need to convert to a format for Hashcat: `hccapx`. Hashcat hosts online service for this: [cap2hashcat online](https://hashcat.net/cap2hashcat).
+
+For offline: hashcat-utils repo:
+```bash
+git clone https://github.com/hashcat/hashcat-utils.git
+```
+```bash
+cd hashcat-utils/src
+```
+```bash
+make
+```
+#### Cap2hccapx Syntax
+```bash
+./cap2hccapx.bin 
+usage: ./cap2hccapx.bin input.cap output.hccapx [filter by essid] [additional network essid:bssid]
+```
+#### Convert to Crackable File
+```bash
+./cap2hccapx.bin corp_capture1-01.cap mic_to_crack.hccapx
+```
+```bash
+hashcat -a 0 -m 22000 mic_to_crack.hccapx /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
+```
+### Cracking PMKID
+This attack can be performed against wireless networks that use WPA/WPA2-PSK (pre-shared key) and allows us to obtain the PSK being used by the targeted wireless network by attacking the AP directly. The attack does not require deauthentication (deauth) of any users from the target AP. The PMK is the same as in the MIC (4-way handshake) attack but can generally be obtained faster and without interrupting any users.
+
+The Pairwise Master Key Identifier (PMKID) is the AP's unique identifier to keep track of the Pairwise Master Key (PMK) used by the client. The PMKID is located in the 1st packet of the 4-way handshake and can be easier to obtain since it does not require capturing the entire 4-way handshake. PMKID is calculated with HMAC-SHA1 with the PMK (Wireless network password) used as a key, the string "PMK Name," MAC address of the access point, and the MAC address of the station. Below is a visual representation of the PMKID calculation:
+![image](https://user-images.githubusercontent.com/89045912/180089715-3596703e-adeb-4475-9e8f-6c9e5c3530cb.png)
+
+Obtain pmkid hash by extracting from .cap file with [hcxpcapngtool](https://github.com/ZerBea/hcxtools)
+```bash
+hcxpcaptool -z pmkidhash_corp cracking_pmkid.cap 
+```
+```bash
+hashcat -a 0 -m 22000 pmkidhash_corp /opt/useful/SecLists/Passwords/Leaked-Databases/rockyou.txt
+```
+
+
 
  
  
