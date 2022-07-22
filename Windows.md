@@ -332,6 +332,50 @@ The access rights themselves are managed by Access Control Entries (ACE) in Acce
 The permissions to access a securable object are given by the security descriptor, classified into two types of ACLs: the Discretionary Access Control List (DACL) or System Access Control List (SACL). Every thread and process started or initiated by a user goes through an authorization process. An integral part of this process is access tokens, validated by the Local Security Authority (LSA). In addition to the SID, these access tokens contain other security-relevant information. Understanding these functionalities is an essential part of learning how to use and work around these security mechanisms during the privilege escalation phase.
 
 ### User Account Control (UAC)
+Confirms any installs to block malware from system. Window pops up to request admin approval of all installs.
+
+[UAC Overview](https://docs.microsoft.com/en-us/windows/security/identity-protection/user-account-control/how-user-account-control-works)
+
+## Registry
+
+The [Registry](https://en.wikipedia.org/wiki/Windows_Registry) is a hierarchal database critical for the operating system. Divided into computer specific and user specific data. Open Registry Editor with `regedit` from command line or Windows search bar.
+
+The tree consists of main folders (root keys) in which subfolders (subkeys) with their entries/files (values) are located. 11 different types of values that can be entered into a subkey.
+|Value |	Type|
+| --- | --- |
+|REG_BINARY |	Binary data in any form.|
+|REG_DWORD |	A 32-bit number.|
+|REG_DWORD_LITTLE_ENDIAN |	A 32-bit number in little-endian format. Windows is designed to run on little-endian computer architectures. Therefore, this value is defined as REG_DWORD in the Windows header files.|
+|REG_DWORD_BIG_ENDIAN |	A 32-bit number in big-endian format. Some UNIX systems support big-endian architectures.|
+|REG_EXPAND_SZ |	A null-terminated string that contains unexpanded references to environment variables (for example, "%PATH%"). It will be a Unicode or ANSI string depending on whether you use the Unicode or ANSI functions. To expand the environment variable references, use the ExpandEnvironmentStrings function.|
+|REG_LINK |	A null-terminated Unicode string containing the target path of a symbolic link created by calling the RegCreateKeyEx function with|REG_OPTION_CREATE_LINK.|
+|REG_MULTI_SZ |	A sequence of null-terminated strings, terminated by an empty string (\0). The following is an example: String1\0String2\0String3\0LastString\0\0 The first \0 terminates the first string, the second to the last \0 terminates the last string, and the final \0 terminates the sequence. Note that the final terminator must be factored into the length of the string.|
+|REG_NONE |	No defined value type.|
+|REG_QWORD |	A 64-bit number.|
+|REG_QWORD_LITTLE_ENDIAN |	A 64-bit number in little-endian format. Windows is designed to run on little-endian computer architectures. Therefore, this value is defined as REG_QWORD in the Windows header files.|
+|REG_SZ |	A null-terminated string. This will be either a Unicode or an ANSI string, depending on whether you use the Unicode or ANSI functions.|
+
+- Each folder under Computer is a key
+- Root keys all start with HKEY
+- A key such as HKEY-LOCAL-MACHINE is abbreviated to HKLM; contains all the settings that are relevant to the local system.
+    + This root key contains six subkeys:
+        * SAM
+        * SECURITY
+        * SYSTEM
+        * SOFTWARE
+        * HARDWARE
+        * BCD
+    + These are loaded into memeory at boot time (except HARDWARE which is dynamically loaded)
++ The entire system registry is stored in several files in the operating system: `C:\Windows\System32\Config\`
+
+The user spcecific registry hive (HKCU) is stored in the user folder: `C:\Windows\Users\<USERNMAME>\Ntuser.dat`
+```powershell
+gci -Hidden
+```
+## Run and RunOnce Keys
+Rgistry hives contain a logical group of keys, subkeys, and values to support. 
+
+
 
 
 
