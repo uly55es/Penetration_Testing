@@ -373,7 +373,36 @@ The user spcecific registry hive (HKCU) is stored in the user folder: `C:\Window
 gci -Hidden
 ```
 ## Run and RunOnce Keys
-Rgistry hives contain a logical group of keys, subkeys, and values to support. 
+Registry hives contain a logical group of keys, subkeys, and values to support.
+
+[Run and RunOnce registry keys](https://docs.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys)
+
+Includes the following keys:
+```powershell
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce
+```
+
+## Application Whitelisting
+
+A list of approved software applications or executables allowed to be present and run on the system. The goal is to protect an organization from harmful malware and unapproved software that does not align with the specific business needs of an organization.
+
+## AppLocker
+
+Microsoft's application whitelisting solution. Gives system admins control over which applications and files users can run. 
+
+## Local Group Policy
+
+Allows admins to set, configure, and adjust a variety of settings.
+
+Can open in the start menu:
+```powershell
+gpedit.msc
+```
+
+
 
 
 
